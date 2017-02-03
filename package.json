@@ -5,7 +5,7 @@
   "main": "index",
   "repository": {
     "type": "git",
-    "url": "https://github.com/haydnhkim/hexo-renderer-webpack-2.git"
+    "url": "https://github.com/jimmyn/hexo-renderer-webpack-2.git"
   },
   "bugs": {
     "url": "https://github.com/haydnhkim/hexo-renderer-webpack-2/issues"
@@ -15,14 +15,11 @@
     "webpack",
     "renderer"
   ],
-  "author": "Haydn Hyundong Kim (https://github.com/haydnhkim)",
-  "license": {
-    "type": "MIT",
-    "url": "https://raw.github.com/haydnhkim/hexo-renderer-webpack-2/master/LICENSE"
-  },
+  "author": "Dmitriy Nevzorov (https://github.com/jimmyn)",
+  "license": "MIT",
   "dependencies": {
     "lodash": "^4.13.1",
-    "memory-fs": "^0.3.0",
-    "webpack": "^2.1.0-beta.17"
+    "memory-fs": "^0.4.1",
+    "webpack": "^2.2.0"
   }
 }
