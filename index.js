@@ -3,8 +3,8 @@ var webpack = require('webpack');
 var extend = require('util')._extend;
 var os = require('os');
 var path = require('path');
-var MemoryFS = require('memory-fs');
-var memoryFs = new MemoryFS();
+var MemoryFileSystem = require('memory-fs');
+var memoryFs = new MemoryFileSystem();
 var fs = require('fs');
 var TMP_PATH = os.tmpdir();
 
@@ -21,6 +21,8 @@ var renderer = function(data, options, callback) {
     }
   });
 
+  var outputPath = path.join(config.output.path, config.output.filename);
+
   //
   // Setup compiler to use in-memory file system then run it.
   //
@@ -28,8 +30,6 @@ var renderer = function(data, options, callback) {
   compiler.outputFileSystem = memoryFs;
 
   compiler.run(function(err, stats) {
-    var output = compiler.options.output;
-    var outputPath = path.join(output.path, output.filename);
 
     if (stats.toJson().errors.length > 0) {
       hexo.log.log(stats.toString());
@@ -37,13 +37,6 @@ var renderer = function(data, options, callback) {
     }
 
     var contents = memoryFs.readFileSync(outputPath).toString();
-
-    // Fix problems with HTML beautification
-    // see: https://github.com/hexojs/hexo/issues/1663
-    contents = contents
-      .replace(/</g, ' < ')
-      .replace(/< </g, ' << ');
-
     return callback(null, contents);
   });
 
