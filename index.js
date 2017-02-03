@@ -4,75 +4,28 @@ var extend = require('util')._extend;
 var os = require('os');
 var path = require('path');
 var MemoryFS = require('memory-fs');
-var fs = new MemoryFS();
+var memoryFs = new MemoryFS();
+var fs = require('fs');
 var TMP_PATH = os.tmpdir();
-var isDevMode = process.env.NODE_ENV === 'development';
 
 var renderer = function(data, options, callback) {
-  var userConfig = extend(
-    hexo.theme.config.webpack || {},
-    hexo.config.webpack || {}
-  );
+  var webpackConfigFileName = hexo.theme.config.webpack_config || hexo.config.webpack_config || 'webpack.config.js';
+  var webpackConfigFile = require(path.resolve(webpackConfigFileName));
+  var webpackConfig = _.isFunction(webpackConfigFile) ? webpackConfigFile(data) : webpackConfigFile;
 
-  var cwd = process.cwd();
-
-  //
-  // Convert config of the entry to object.
-  //
-  var entry = (function(entry) {
-    if (_.isString(entry)) entry = [entry];
-
-    return entry
-      .filter(function(n){
-        return _.includes(n, 'source')
-      })
-      .map(function(n){
-        return path.join(cwd, n)
-      });
-  })(userConfig.entry);
-
-  //
-  // If this file is not a webpack entry simply return the file.
-  //
-  if (entry.length === 0) {
-    return callback(null, data.text);
-  }
-  //
-  // Copy config then extend it with some defaults.
-  //
-  var config = extend({}, userConfig);
-
-  if (isDevMode)
-    config.devtool = 'cheap-module-eval-source-map';
-
-  config = extend(config, {
+  var config = extend(webpackConfig, {
     entry: data.path,
     output: {
-      entry: data.path,
       path: TMP_PATH,
       filename: path.basename(data.path)
-    },
-    plugins: [
-      new webpack.NoErrorsPlugin(),
-      new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.UglifyJsPlugin({
-        sourceMap: isDevMode,
-        minimize: true,
-        compress: { warnings: false }
-      }),
-      new webpack.optimize.AggressiveMergingPlugin(),
-      new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(
-          isDevMode ? 'development' : 'production')
-      })
-    ]
+    }
   });
 
   //
   // Setup compiler to use in-memory file system then run it.
   //
   var compiler = webpack(config);
-  compiler.outputFileSystem = fs;
+  compiler.outputFileSystem = memoryFs;
 
   compiler.run(function(err, stats) {
     var output = compiler.options.output;
@@ -83,7 +36,7 @@ var renderer = function(data, options, callback) {
       return callback(stats.toJson().errors, 'Webpack Error.');
     }
 
-    contents = fs.readFileSync(outputPath).toString();
+    var contents = memoryFs.readFileSync(outputPath).toString();
 
     // Fix problems with HTML beautification
     // see: https://github.com/hexojs/hexo/issues/1663

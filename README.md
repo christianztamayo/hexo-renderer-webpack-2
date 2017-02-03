@@ -17,66 +17,35 @@ You can configure this plugin in `_config.yml` or your theme's `_config.yml`.
 If you want to use some presets, you will need to install and set presets value.
 
 ```
-$ npm install --save-dev babel-core babel-loader babel-preset-es2015 babel-preset-react babel-preset-stage-0
+$ npm install --save-dev babel-core babel-loader babel-preset-es2015
 ```
+
+add `webpack.config.js` to the project root
+``` js
+module.exports = {
+  module: {
+    loaders: [{
+      test: /\.js/,
+      loader: 'babel-loader',
+      exclude: /node_modules/,
+      query: {
+        presets: [
+          ['es2015', {
+            modules: false,
+            loose: true
+          }]
+        ]
+      }
+    }]
+  }
+};
+```
+
+or specify the file path in config
 
 ``` yaml
-webpack:
-  entry: "source/scripts/faq.js"
-  module:
-    loaders:
-      -
-        test: !!js/regexp /\.json$/
-        loader: "json-loader"
-      -
-        test: !!js/regexp /\.(png|jpg|jpeg|gif|svg|woff|woff2)(\?.*)?$/
-        loader: "file-loader"
-      -
-        test: !!js/regexp /\.js$/
-        exclude: !!js/regexp /node_modules/
-        loader: "babel"
-        query:
-          presets:
-            - "es2015"
-            - "stage-0"
-            - "react"
+webpack_config: 'themes/my-theme/webpack.config.js'
 ```
-
-or
-
-``` yaml
-webpack:
-  entry:
-    - 'themes/my-theme/source/js/app.js'
-    - 'themes/my-theme/source/js/lib.js'
-```
-
-## Development Mode
-
-This project uses NODE_ENV variable for sourcemap.
-
-set package.json
-
-```
-{
-    "name": "hexo-renderer-webpack-2",
-    ...
-    scripts: {
-        "dev": "NODE_ENV=development hexo server"
-    }
-}
-```
-
-run
-
-```
-$ npm run dev
-```
-
-## Known Issues
-
-* This project is not fully support webpack. You can't set node modules in entry.
-* break complie when js has HTML tags.
 
 ## Links
 
