@@ -1,14 +1,14 @@
 {
-  "name": "hexo-renderer-webpack-2",
+  "name": "hexo-renderer-webpack-2-advanced",
   "version": "0.5.0",
-  "description": "Webpack v2 renderer plugin for Hexo",
+  "description": "Webpack v2 renderer plugin for Hexo with support of webpack.config.js",
   "main": "index",
   "repository": {
     "type": "git",
     "url": "https://github.com/jimmyn/hexo-renderer-webpack-2.git"
   },
   "bugs": {
-    "url": "https://github.com/haydnhkim/hexo-renderer-webpack-2/issues"
+    "url": "https://github.com/jimmyn/hexo-renderer-webpack-2/issues"
   },
   "keywords": [
     "hexo",

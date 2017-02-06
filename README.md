@@ -1,4 +1,4 @@
-# hexo-renderer-webpack-2
+# hexo-renderer-webpack-2-advanced
 
 Add Hexo support for Webpack(v2).
 
@@ -7,22 +7,18 @@ Fork from the original hexo-renderer-webpack repository: https://github.com/bria
 ## Install
 
 ``` bash
-$ npm install --save hexo-renderer-webpack-2
+$ npm install --save hexo-renderer-webpack-2-advanced
 ```
 
 ## Options
 
-You can configure this plugin in `_config.yml` or your theme's `_config.yml`.
-
-If you want to use some presets, you will need to install and set presets value.
-
-```
-$ npm install --save-dev babel-core babel-loader babel-preset-es2015
-```
-
-add `webpack.config.js` to the project root
+Add `webpack.config.js` to the project root
 ``` js
 module.exports = {
+  entry: [
+    'themes/default/source/js/index.js',
+    'themes/default/source/js/page.js',
+  ],
   module: {
     loaders: [{
       test: /\.js/,
@@ -46,6 +42,8 @@ or specify the file path in config
 ``` yaml
 webpack_config: 'themes/my-theme/webpack.config.js'
 ```
+
+Only files added to `entry` will be transpiled with the webpack
 
 ## Links
 
